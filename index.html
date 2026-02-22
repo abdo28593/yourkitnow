@@ -3,8 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI PCB Generator: Transform text descriptions and BOMs into manufacturing-ready PCB files in minutes. Powered by AI, built on KiCad, ready to manufacture.">
+    <meta name="keywords" content="PCB design, AI PCB generator, circuit board design, Gerber files, KiCad, electronics, hardware">
+    <meta name="author" content="AI PCB Generator">
+    <meta name="theme-color" content="#0a0e27">
+    <meta property="og:title" content="AI PCB Generator - Text to PCB in Minutes">
+    <meta property="og:description" content="Transform text descriptions and BOMs into manufacturing-ready PCB files in minutes. Powered by AI, built on KiCad.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yoursite.com">
+    <meta property="og:image" content="https://yoursite.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI PCB Generator - Text to PCB in Minutes">
+    <meta name="twitter:description" content="Transform text descriptions and BOMs into manufacturing-ready PCB files in minutes.">
     <title>AI PCB Generator - Text to PCB in Minutes</title>
     <style>
+        :root {
+            /* Dark Theme */
+            --bg-primary: #0a0e27;
+            --bg-secondary: #1a1f3a;
+            --bg-tertiary: #26293d;
+            --bg-card: rgba(26, 31, 58, 0.8);
+            --text-primary: #e0e0e0;
+            --text-secondary: #a8a8a8;
+            --text-tertiary: #888;
+            --text-inverse: #0a0e27;
+            --accent: #64c8ff;
+            --accent-dark: #4da8ff;
+            --border-light: rgba(100, 200, 255, 0.1);
+            --border-medium: rgba(100, 200, 255, 0.15);
+            --border-dark: rgba(100, 200, 255, 0.2);
+            --border-highlight: rgba(100, 200, 255, 0.4);
+            --gradient-bg: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            --gradient-accent: linear-gradient(135deg, #64c8ff 0%, #4da8ff 100%);
+            --gradient-text: linear-gradient(135deg, #64c8ff 0%, #ffffff 50%, #64c8ff 100%);
+            --shadow-light: 0 10px 40px rgba(100, 200, 255, 0.2);
+            --shadow-medium: 0 15px 50px rgba(100, 200, 255, 0.3);
+            --nav-link-color: #b0b0b0;
+            --surface-soft: rgba(100, 200, 255, 0.05);
+            --surface-soft-hover: rgba(100, 200, 255, 0.1);
+            --surface-muted: rgba(100, 200, 255, 0.02);
+            --surface-strong: rgba(26, 31, 58, 1);
+            --faq-answer-bg: rgba(10, 14, 39, 0.5);
+            --hero-glow: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+            --use-case-gradient: linear-gradient(135deg, rgba(100, 200, 255, 0.1) 0%, rgba(77, 168, 255, 0.05) 100%);
+            --shadow-soft: 0 10px 30px rgba(100, 200, 255, 0.1);
+            --featured-card-bg: rgba(100, 200, 255, 0.08);
+        }
+
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fa;
+            --bg-tertiary: #eef1f5;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-primary: #1a1f3a;
+            --text-secondary: #4a4a4a;
+            --text-tertiary: #888;
+            --text-inverse: #ffffff;
+            --accent: #2196f3;
+            --accent-dark: #1976d2;
+            --border-light: rgba(33, 150, 243, 0.08);
+            --border-medium: rgba(33, 150, 243, 0.12);
+            --border-dark: rgba(33, 150, 243, 0.2);
+            --border-highlight: rgba(33, 150, 243, 0.4);
+            --gradient-bg: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            --gradient-accent: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            --gradient-text: linear-gradient(135deg, #2196f3 0%, #1a1f3a 50%, #2196f3 100%);
+            --shadow-light: 0 10px 40px rgba(33, 150, 243, 0.1);
+            --shadow-medium: 0 15px 50px rgba(33, 150, 243, 0.15);
+            --nav-link-color: #4a4a4a;
+            --surface-soft: rgba(33, 150, 243, 0.06);
+            --surface-soft-hover: rgba(33, 150, 243, 0.1);
+            --surface-muted: rgba(33, 150, 243, 0.03);
+            --surface-strong: rgba(255, 255, 255, 1);
+            --faq-answer-bg: rgba(245, 247, 250, 0.85);
+            --hero-glow: radial-gradient(circle, rgba(33, 150, 243, 0.14) 0%, transparent 70%);
+            --use-case-gradient: linear-gradient(135deg, rgba(33, 150, 243, 0.12) 0%, rgba(25, 118, 210, 0.06) 100%);
+            --shadow-soft: 0 10px 30px rgba(33, 150, 243, 0.12);
+            --featured-card-bg: rgba(33, 150, 243, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +90,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: #e0e0e0;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
             overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Navigation */
@@ -25,7 +103,7 @@
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+            border-bottom: 1px solid var(--border-light);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -34,10 +112,16 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #64c8ff 0%, #4da8ff 100%);
+            background: var(--gradient-accent);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .nav-links {
@@ -47,14 +131,31 @@
         }
 
         .nav-links a {
-            color: #b0b0b0;
+            color: var(--nav-link-color);
             text-decoration: none;
             transition: color 0.3s;
             font-size: 0.95rem;
         }
 
         .nav-links a:hover {
-            color: #64c8ff;
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: var(--surface-soft);
+            color: var(--text-primary);
+            border: 1px solid var(--border-medium);
+            border-radius: 999px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-highlight);
+            background: var(--surface-soft-hover);
         }
 
         /* Hero Section */
@@ -76,7 +177,7 @@
             right: -20%;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+            background: var(--hero-glow);
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
@@ -96,7 +197,7 @@
             font-size: 3.5rem;
             line-height: 1.2;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #64c8ff 0%, #ffffff 50%, #64c8ff 100%);
+            background: var(--gradient-text);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -105,7 +206,7 @@
 
         .hero p {
             font-size: 1.3rem;
-            color: #a8a8a8;
+            color: var(--text-secondary);
             margin-bottom: 2rem;
             line-height: 1.6;
         }
@@ -130,24 +231,24 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #64c8ff 0%, #4da8ff 100%);
-            color: #0a0e27;
-            box-shadow: 0 10px 40px rgba(100, 200, 255, 0.2);
+            background: var(--gradient-accent);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-light);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(100, 200, 255, 0.3);
+            box-shadow: var(--shadow-medium);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #64c8ff;
-            border: 2px solid #64c8ff;
+            color: var(--accent);
+            border: 2px solid var(--accent);
         }
 
         .btn-secondary:hover {
-            background: rgba(100, 200, 255, 0.1);
+            background: var(--surface-soft-hover);
             transform: translateY(-3px);
         }
 
@@ -162,7 +263,7 @@
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #64c8ff 0%, #ffffff 50%);
+            background: var(--gradient-text);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -170,7 +271,7 @@
 
         .section-subtitle {
             text-align: center;
-            color: #888;
+            color: var(--text-tertiary);
             margin-bottom: 3rem;
             font-size: 1.1rem;
         }
@@ -183,8 +284,8 @@
         }
 
         .step {
-            background: rgba(100, 200, 255, 0.05);
-            border: 1px solid rgba(100, 200, 255, 0.2);
+            background: var(--surface-soft);
+            border: 1px solid var(--border-dark);
             padding: 2rem;
             border-radius: 12px;
             text-align: center;
@@ -193,15 +294,15 @@
         }
 
         .step:hover {
-            background: rgba(100, 200, 255, 0.1);
-            border-color: rgba(100, 200, 255, 0.4);
+            background: var(--surface-soft-hover);
+            border-color: var(--border-highlight);
             transform: translateY(-5px);
         }
 
         .step-number {
             font-size: 3rem;
             font-weight: 700;
-            color: #64c8ff;
+            color: var(--accent);
             opacity: 0.3;
             margin-bottom: 1rem;
         }
@@ -209,18 +310,18 @@
         .step h3 {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .step p {
-            color: #a8a8a8;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
         /* Features Grid */
         .features {
             padding: 5rem 2rem;
-            background: rgba(100, 200, 255, 0.02);
+            background: var(--surface-muted);
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -233,16 +334,16 @@
         }
 
         .feature-card {
-            background: rgba(26, 31, 58, 0.8);
-            border: 1px solid rgba(100, 200, 255, 0.15);
+            background: var(--bg-card);
+            border: 1px solid var(--border-medium);
             padding: 2rem;
             border-radius: 12px;
             transition: all 0.3s ease;
         }
 
         .feature-card:hover {
-            border-color: rgba(100, 200, 255, 0.4);
-            background: rgba(26, 31, 58, 1);
+            border-color: var(--border-highlight);
+            background: var(--surface-strong);
             transform: translateY(-8px);
         }
 
@@ -255,11 +356,11 @@
         .feature-card h3 {
             font-size: 1.2rem;
             margin-bottom: 0.8rem;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .feature-card p {
-            color: #a8a8a8;
+            color: var(--text-secondary);
             line-height: 1.6;
             font-size: 0.95rem;
         }
@@ -279,32 +380,32 @@
         }
 
         .use-case {
-            background: linear-gradient(135deg, rgba(100, 200, 255, 0.1) 0%, rgba(77, 168, 255, 0.05) 100%);
-            border: 1px solid rgba(100, 200, 255, 0.2);
+            background: var(--use-case-gradient);
+            border: 1px solid var(--border-dark);
             padding: 2rem;
             border-radius: 12px;
             transition: all 0.3s ease;
         }
 
         .use-case:hover {
-            border-color: #64c8ff;
-            box-shadow: 0 10px 30px rgba(100, 200, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-soft);
         }
 
         .use-case h3 {
-            color: #64c8ff;
+            color: var(--accent);
             margin-bottom: 0.5rem;
         }
 
         .use-case p {
-            color: #a8a8a8;
+            color: var(--text-secondary);
             font-size: 0.95rem;
         }
 
         /* Pricing */
         .pricing {
             padding: 5rem 2rem;
-            background: rgba(100, 200, 255, 0.02);
+            background: var(--surface-muted);
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -317,8 +418,8 @@
         }
 
         .pricing-card {
-            background: rgba(26, 31, 58, 0.8);
-            border: 1px solid rgba(100, 200, 255, 0.15);
+            background: var(--bg-card);
+            border: 1px solid var(--border-medium);
             padding: 2rem;
             border-radius: 12px;
             text-align: center;
@@ -327,26 +428,26 @@
         }
 
         .pricing-card.featured {
-            border-color: #64c8ff;
-            background: rgba(100, 200, 255, 0.08);
+            border-color: var(--accent);
+            background: var(--featured-card-bg);
             transform: scale(1.05);
         }
 
         .pricing-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .price {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #64c8ff;
+            color: var(--accent);
             margin: 1rem 0;
         }
 
         .price-desc {
-            color: #888;
+            color: var(--text-tertiary);
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
         }
@@ -360,8 +461,8 @@
 
         .pricing-features li {
             padding: 0.5rem 0;
-            color: #a8a8a8;
-            border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .pricing-features li:last-child {
@@ -377,8 +478,8 @@
 
         .faq-item {
             margin-bottom: 1.5rem;
-            background: rgba(100, 200, 255, 0.05);
-            border: 1px solid rgba(100, 200, 255, 0.15);
+            background: var(--surface-soft);
+            border: 1px solid var(--border-medium);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -387,7 +488,7 @@
             padding: 1.5rem;
             font-weight: 600;
             cursor: pointer;
-            background: rgba(26, 31, 58, 0.8);
+            background: var(--bg-card);
             transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
@@ -395,20 +496,20 @@
         }
 
         .faq-question:hover {
-            background: rgba(100, 200, 255, 0.1);
+            background: var(--surface-soft-hover);
         }
 
         .faq-toggle {
-            color: #64c8ff;
+            color: var(--accent);
             font-size: 1.5rem;
         }
 
         .faq-answer {
             padding: 1.5rem;
-            color: #a8a8a8;
-            background: rgba(10, 14, 39, 0.5);
+            color: var(--text-secondary);
+            background: var(--faq-answer-bg);
             display: none;
-            border-top: 1px solid rgba(100, 200, 255, 0.1);
+            border-top: 1px solid var(--border-light);
         }
 
         .faq-item.active .faq-answer {
@@ -422,9 +523,9 @@
         /* Footer */
         footer {
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(100, 200, 255, 0.1);
+            border-top: 1px solid var(--border-light);
             text-align: center;
-            color: #888;
+            color: var(--text-tertiary);
             margin-top: 3rem;
         }
 
@@ -435,7 +536,7 @@
 
         .footer-vision {
             margin-bottom: 2rem;
-            color: #a8a8a8;
+            color: var(--text-secondary);
             font-size: 1.1rem;
         }
 
@@ -448,13 +549,13 @@
         }
 
         .footer-links a {
-            color: #64c8ff;
+            color: var(--accent);
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .footer-links a:hover {
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         /* Responsive */
@@ -475,6 +576,11 @@
                 display: none;
             }
 
+            .theme-toggle {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.75rem;
+            }
+
             .cta-buttons {
                 flex-direction: column;
             }
@@ -493,12 +599,15 @@
     <!-- Navigation -->
     <nav>
         <div class="logo">AI PCB Generator</div>
-        <ul class="nav-links">
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#faq">FAQ</a></li>
-        </ul>
+        <div class="nav-actions">
+            <ul class="nav-links">
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">Light Mode</button>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -507,7 +616,7 @@
             <h1>Turn Text Into Manufacturing-Ready PCBs</h1>
             <p>From a simple text request or Bill of Materials to complete Gerber files, ready to manufacture. Powered by AI. Built for speed.</p>
             <div class="cta-buttons">
-                <button class="btn btn-primary">Generate Your PCB</button>
+                <a class="btn btn-primary" href="page.html">Generate Your PCB</a>
                 <button class="btn btn-secondary">View Demo</button>
                 <a class="btn btn-secondary" href="https://t.me/YourKitNow_bot" target="_blank" rel="noopener">Open Telegram Bot</a>
             </div>
@@ -769,6 +878,26 @@
     </footer>
 
     <script>
+        const THEME_KEY = 'theme';
+        const themeToggleButton = document.getElementById('themeToggle');
+
+        function applyTheme(theme) {
+            const isLight = theme === 'light';
+            document.body.classList.toggle('light-mode', isLight);
+            themeToggleButton.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+            themeToggleButton.setAttribute('aria-pressed', String(isLight));
+        }
+
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+
+        themeToggleButton.addEventListener('click', () => {
+            const currentIsLight = document.body.classList.contains('light-mode');
+            const nextTheme = currentIsLight ? 'dark' : 'light';
+            localStorage.setItem(THEME_KEY, nextTheme);
+            applyTheme(nextTheme);
+        });
+
         // FAQ Toggle Functionality
         const faqItems = document.querySelectorAll('.faq-item');
         
