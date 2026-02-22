@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PCB Generator - Text to PCB in Minutes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #64c8ff 0%, #4da8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #64c8ff;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-30px) translateX(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #ffffff 50%, #64c8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #a8a8a8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #64c8ff 0%, #4da8ff 100%);
+            color: #0a0e27;
+            box-shadow: 0 10px 40px rgba(100, 200, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(100, 200, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #64c8ff;
+            border: 2px solid #64c8ff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 200, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #ffffff 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step:hover {
+            background: rgba(100, 200, 255, 0.1);
+            border-color: rgba(100, 200, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #64c8ff;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .step p {
+            color: #a8a8a8;
+            line-height: 1.6;
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 5rem 2rem;
+            background: rgba(100, 200, 255, 0.02);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            background: rgba(26, 31, 58, 1);
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: #a8a8a8;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, rgba(100, 200, 255, 0.1) 0%, rgba(77, 168, 255, 0.05) 100%);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .use-case:hover {
+            border-color: #64c8ff;
+            box-shadow: 0 10px 30px rgba(100, 200, 255, 0.1);
+        }
+
+        .use-case h3 {
+            color: #64c8ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .use-case p {
+            color: #a8a8a8;
+            font-size: 0.95rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 5rem 2rem;
+            background: rgba(100, 200, 255, 0.02);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: #64c8ff;
+            background: rgba(100, 200, 255, 0.08);
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #64c8ff;
+            margin: 1rem 0;
+        }
+
+        .price-desc {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-features {
+            text-align: left;
+            list-style: none;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #a8a8a8;
+            border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 5rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(26, 31, 58, 0.8);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: rgba(100, 200, 255, 0.1);
+        }
+
+        .faq-toggle {
+            color: #64c8ff;
+            font-size: 1.5rem;
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            color: #a8a8a8;
+            background: rgba(10, 14, 39, 0.5);
+            display: none;
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+            text-align: center;
+            color: #888;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-vision {
+            margin-bottom: 2rem;
+            color: #a8a8a8;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #64c8ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">AI PCB Generator</div>
+        <ul class="nav-links">
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Turn Text Into Manufacturing-Ready PCBs</h1>
+            <p>From a simple text request or Bill of Materials to complete Gerber files, ready to manufacture. Powered by AI. Built for speed.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary">Generate Your PCB</button>
+                <button class="btn btn-secondary">View Demo</button>
+                <a class="btn btn-secondary" href="https://t.me/YourKitNow_bot" target="_blank" rel="noopener">Open Telegram Bot</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Three simple steps from idea to manufacturing files</p>
+        
+        <div class="workflow-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Describe Your PCB</h3>
+                <p>Submit a text description, schematic reference, or Bill of Materials (BOM). Natural language works great.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>AI Designs & Routes</h3>
+                <p>Our AI generates the PCB layout and auto-routes traces using KiCad CLI and FreeRouting technology.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Download Everything</h3>
+                <p>Get Gerber files, STEP models, STL enclosures, and schematics. Instant notifications via Telegram.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <h2 class="section-title">Packed With Power</h2>
+        <p class="section-subtitle">Everything you need for rapid PCB development</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>Minutes, Not Hours</h3>
+                <p>Get complete PCB designs faster than manual design. From BOM to manufacturing-ready files in minutes.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📋</span>
+                <h3>BOM Import</h3>
+                <p>Paste a Bill of Materials. Our AI understands component values, footprints, and datasheets automatically.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔧</span>
+                <h3>Real KiCad Integration</h3>
+                <p>Built on KiCad CLI. No proprietary formats. Real, professional-grade EDA data you can trust.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3>Smart Auto-Routing</h3>
+                <p>FreeRouting + AI optimization for clean, efficient traces. Minimize EMI. Maximize manufacturability.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📁</span>
+                <h3>Complete File Set</h3>
+                <p>Gerber, STEP, STL, KiCad SCH, and PCB files. Everything a fab needs. Everything you need.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🏭</span>
+                <h3>Enclosure Design</h3>
+                <p>Auto-generate STL enclosure models via OpenSCAD. Ready for 3D printing or custom manufacturing.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📲</span>
+                <h3>Telegram Notifications</h3>
+                <p>Get instant alerts when your design is ready. Check status, download files, and share with your team.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔗</span>
+                <h3>API & Automation</h3>
+                <p>REST API ready. Integrate with n8n, Zapier, or your own tools. Automate your entire workflow.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📐</span>
+                <h3>Template-Based AI</h3>
+                <p>Proven configurations for common designs. Fast, reliable, and battle-tested.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases" id="use-cases">
+        <h2 class="section-title">Built For Engineers</h2>
+        <p class="section-subtitle">Works for hobby projects, startups, and serious production</p>
+        
+        <div class="use-cases-grid">
+            <div class="use-case">
+                <h3>Arduino & Maker Projects</h3>
+                <p>Rapid prototyping for open-source hardware. Design custom shields and embedded systems in minutes.</p>
+            </div>
+            <div class="use-case">
+                <h3>IoT Devices</h3>
+                <p>Small-form-factor boards for sensors, gateways, and edge computing. Auto-generate mounting options.</p>
+            </div>
+            <div class="use-case">
+                <h3>Relay & Switching Boards</h3>
+                <p>Power circuits, relay modules, and high-current designs. Optimized trace width and thermal management.</p>
+            </div>
+            <div class="use-case">
+                <h3>Hardware Startups</h3>
+                <p>Scale from prototype to production. Iterate 10x faster with automated design verification and file generation.</p>
+            </div>
+            <div class="use-case">
+                <h3>Educational Labs</h3>
+                <p>Teach PCB design without years of EDA experience. Students focus on circuits, AI handles the layout.</p>
+            </div>
+            <div class="use-case">
+                <h3>Industrial & Embedded</h3>
+                <p>Complex multi-layer boards, high-speed digital, and RF circuits. Professional, auditable results.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <h2 class="section-title">Simple Credit-Based Pricing</h2>
+        <p class="section-subtitle">Pay only for what you use. No subscriptions, no surprises.</p>
+        
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">50cr</div>
+                <div class="price-desc">One-time purchase</div>
+                <ul class="pricing-features">
+                    <li>✓ 5 PCB designs</li>
+                    <li>✓ Standard templates</li>
+                    <li>✓ Gerber + STEP files</li>
+                    <li>✓ Email support</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Professional</h3>
+                <div class="price">200cr</div>
+                <div class="price-desc">Bulk economy pricing</div>
+                <ul class="pricing-features">
+                    <li>✓ 30 PCB designs</li>
+                    <li>✓ All templates + custom</li>
+                    <li>✓ Complete file set</li>
+                    <li>✓ API access</li>
+                    <li>✓ Priority support</li>
+                    <li>✓ Team collaboration</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Most Popular</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <div class="price-desc">Contact our team</div>
+                <ul class="pricing-features">
+                    <li>✓ Unlimited designs</li>
+                    <li>✓ Custom templates</li>
+                    <li>✓ Advanced automation</li>
+                    <li>✓ SLA + dedicated support</li>
+                    <li>✓ On-premise option</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <h2 class="section-title">Questions Answered</h2>
+        <p class="section-subtitle">Everything engineers need to know</p>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Is this real KiCad?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Yes. We use KiCad 6.0+ CLI with real EDA engines. Your designs are stored as native KiCad files (.kicad_pcb, .kicad_sch). You can open, edit, and extend them in the desktop app anytime.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Can I download and modify the files?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Absolutely. You own 100% of your designs. Download Gerber, STEP, STL, and KiCad project files. Import into your CAD tools, send to manufacturers, or iterate further. No restrictions.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What about custom templates and design rules?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Professional and Enterprise plans support custom templates. Set trace widths, via sizes, layer stackups, and routing constraints. We'll encode your design rules into the AI templates.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Does it handle complex designs?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                For simple to mid-range boards, yes. Multi-layer, analog, digital, and mixed-signal designs work well. High-speed, RF, and exotic topologies may require human review for optimal results.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How does the API work?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                POST your BOM or design spec as JSON. Get back a job ID. Poll for status or receive Telegram/webhook notifications. Download files via secure URL. Perfect for CI/CD pipelines and automation.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What formats do you support?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Input: Text, BOM (CSV/JSON), schematic PDFs. Output: Gerber RS-274X, STEP 3D, STL, KiCad native files, PDF schematics, assembly drawings, and bill of materials.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Is my design data private?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Your data is encrypted in transit and at rest. We don't train models on your designs. After 30 days, files are auto-deleted unless you choose longer retention. Enterprise offers air-gapped options.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-vision">
+                <strong>Built for speed, automation, and engineers.</strong><br>
+                AI PCB Generator removes the tedium from layout design so you can focus on innovation.
+            </div>
+            <div class="footer-links">
+                <a href="#">Docs</a>
+                <a href="#">GitHub</a>
+                <a href="#">Status</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact</a>
+            </div>
+            <p>&copy; 2024 AI PCB Generator. Built by engineers, for engineers.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                item.classList.toggle('active');
+            });
+        });
+
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
